@@ -5,11 +5,11 @@ import MotorDriver
 import LineSensor
 
 
-rspeed = 900
+rspeed = 800
 
-Kp = 1.2
+Kp = 1.5
 Ki = 0.0
-Kd = 0.5
+Kd = 0.8
 
 #hệ số multi để chia kp, ki, kd chuẩn xác hơn
 multiP = 1
@@ -40,22 +40,12 @@ def pid_line_follow(error):
 
     MotorDriver.motor_drive(left_speed, right_speed)
 
-def setup():
 
-    led.value(1) #bật led báo hiệu hiệu chuẩn
-    print("Hiệu chuẩn cảm biến!")
-
-    LineSensor.calibrate_sensors()
-
-    led.value(0)
-    print("Hiệu chuẩn thành công!")
-
-    utime.sleep(2)
-
-setup()
 
 while True:
     position, is_lost = LineSensor.read_black_line()
+
+    utime.sleep(1)
     
     if is_lost:
         # Khi mất vạch hẳn: Xoay tại chỗ tìm lại vạch theo hướng lệch gần nhất
@@ -64,7 +54,7 @@ while True:
         else:
             MotorDriver.motor_drive(rspeed, -rspeed)  # Xoay phải
     else:
-        error = 3500 - position
+        error = 2000 - position
         pid_line_follow(error)
         
     utime.sleep_ms(2)
